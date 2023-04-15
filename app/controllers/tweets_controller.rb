@@ -12,15 +12,34 @@ class TweetsController < ApplicationController
   def create 
     @tweet = Current.user.tweets.new(tweet_params)
     if @tweet.save
-      redirect_to @tweet, notice: "Tweet was scheduled Succsessfully"
+      redirect_to tweets_path, notice: "Tweet was scheduled Succsessfully"
     else
       render :new, status: :unprocessable_entity
     end
+  end
+  def edit
+  end
+
+  def update
+    if @tweet.update(tweet_params)
+      redirect_to tweets_path, notice: "Tweet was updated Succsessfully"
+    else
+      render :new, status: :unprocessable_entity
+    end
+  end
+
+  def destroy
+    @tweet.destroy
+    redirect_to tweets_path, notice: "Tweet was unscheduled"
   end
 
   private
 
   def tweet_params
     params.require(:tweet).permit(:twitter_account_id, :body, :publish_at)
+  end
+
+  def set_tweet
+    @tweet = Current.user.tweets.find(params[:id])
   end
 end
