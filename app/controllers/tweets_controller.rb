@@ -12,6 +12,7 @@ class TweetsController < ApplicationController
   def create 
     @tweet = Current.user.tweets.new(tweet_params)
     if @tweet.save
+      TweetJob.set(wait_until: @tweet.publish_at).perform_later(@tweet)
       redirect_to tweets_path, notice: "Tweet was scheduled Succsessfully"
     else
       render :new, status: :unprocessable_entity
@@ -22,6 +23,7 @@ class TweetsController < ApplicationController
 
   def update
     if @tweet.update(tweet_params)
+      TweetJob.set(wait_until: @tweet.publish_at).perform_later(self)
       redirect_to tweets_path, notice: "Tweet was updated Succsessfully"
     else
       render :new, status: :unprocessable_entity
