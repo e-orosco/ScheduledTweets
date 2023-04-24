@@ -77,3 +77,5 @@ gem "omniauth-rails_csrf_protection", "~> 1.0"
 
 gem 'tweetkit'
 gem "sidekiq", "~> 7.0"
+
+gem "pg", "~> 1.5"
